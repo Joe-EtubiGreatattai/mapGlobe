@@ -1,6 +1,6 @@
 // App.js
 import React from "react";
-import "./app.css";
+import "./App.css";
 import Globe from "react-globe.gl";
 
 const locationGroups = {
