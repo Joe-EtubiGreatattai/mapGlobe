@@ -308,7 +308,8 @@ export default function App() {
       style={{
         background: "linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%)",
         position: "relative",
-        minHeight: "100vh",
+        minHeight: "80vh",
+        maxHeight: "100vh",
         overflow: "auto",
         width: "100vw",
         fontFamily: "'Inter', 'Segoe UI', sans-serif"
@@ -316,8 +317,8 @@ export default function App() {
     >
       <div style={{
         textAlign: "center",
-        paddingTop: "60px",
-        paddingBottom: "30px"
+        paddingTop: "10px",
+        paddingBottom: "10px"
       }}>
         <h1 style={{
           fontSize: "48px",
@@ -373,9 +374,9 @@ export default function App() {
       <div style={{
         position: "relative",
         width: "90%",
-        maxWidth: "1400px",
+        maxWidth: "100vw",
         margin: "0 auto",
-        height: "600px",
+        height: "64vh",
         background: "#ffffff",
         borderRadius: "16px",
         boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
