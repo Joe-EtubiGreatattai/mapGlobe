@@ -1,5 +1,6 @@
 import React from "react";
 import Globe from "react-globe.gl";
+import "./App.css";
 
 const locationGroups = {
   cities: [
@@ -213,7 +214,7 @@ const locationProfiles = {
 
 export default function App() {
   const globeEl = React.useRef();
-  const [size, setSize] = React.useState([window.innerWidth * 0.85, window.innerHeight * 0.65]);
+  const [size, setSize] = React.useState([window.innerWidth, window.innerHeight * 0.7]);
   const [selected, setSelected] = React.useState(null);
   const [activeFilter, setActiveFilter] = React.useState('cities');
 
@@ -232,7 +233,7 @@ export default function App() {
   }, []);
 
   React.useLayoutEffect(() => {
-    const onResize = () => setSize([window.innerWidth * 0.85, window.innerHeight * 0.65]);
+    const onResize = () => setSize([window.innerWidth, window.innerHeight * 0.7]);
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
@@ -259,11 +260,9 @@ export default function App() {
     if (globeEl.current) {
       globeEl.current.pointOfView({ lat: location.lat, lng: location.lng, altitude: 1.5 }, 1000);
       
-      // Calculate screen position for the location
       setTimeout(() => {
         const screenCoords = globeEl.current.getScreenCoords(location.lat, location.lng);
         if (screenCoords) {
-          // Position popup to the right of the point if there's space, otherwise to the left
           const popupWidth = 320;
           const xPos = screenCoords.x + 50 < size[0] - popupWidth ? screenCoords.x + 50 : screenCoords.x - popupWidth - 50;
           const yPos = Math.min(Math.max(screenCoords.y - 150, 20), size[1] - 400);
@@ -280,16 +279,17 @@ export default function App() {
   const getButtonStyle = (filter) => ({
     padding: '14px 32px',
     margin: '0 6px',
-    border: 'none',
+    border: '1px solid rgba(255,255,255,0.2)',
     borderRadius: '30px',
     fontSize: '15px',
     fontWeight: '600',
     fontFamily: "'Inter', 'Segoe UI', sans-serif",
     cursor: 'pointer',
     transition: 'all 0.3s ease',
-    background: activeFilter === filter ? '#3b4a6b' : '#f5f5f5',
-    color: activeFilter === filter ? 'white' : '#666',
-    boxShadow: activeFilter === filter ? '0 2px 8px rgba(59, 74, 107, 0.3)' : 'none'
+    background: activeFilter === filter ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.05)',
+    color: activeFilter === filter ? 'white' : '#b8bfd8',
+    boxShadow: activeFilter === filter ? '0 4px 20px rgba(255,255,255,0.2)' : 'none',
+    backdropFilter: 'blur(10px)'
   });
 
   const currentProfile = selected
@@ -306,34 +306,63 @@ export default function App() {
   return (
     <div
       style={{
-        background: "linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%)",
+        background: "linear-gradient(180deg, #000000 0%, #0a0e27 50%, #1a1f3a 100%)",
         position: "relative",
-        minHeight: "80vh",
-        maxHeight: "100vh",
+        minHeight: "100vh",
         overflow: "auto",
         width: "100vw",
         fontFamily: "'Inter', 'Segoe UI', sans-serif"
       }}
     >
       <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden',
+        pointerEvents: 'none'
+      }}>
+        {Array.from({ length: 200 }).map((_, i) => (
+          <div
+            key={i}
+            style={{
+              position: 'absolute',
+              width: Math.random() > 0.9 ? '2px' : '1px',
+              height: Math.random() > 0.9 ? '2px' : '1px',
+              background: 'white',
+              borderRadius: '50%',
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              opacity: Math.random() * 0.7 + 0.3,
+              boxShadow: Math.random() > 0.8 ? '0 0 2px white' : 'none'
+            }}
+          />
+        ))}
+      </div>
+
+      <div style={{
         textAlign: "center",
-        paddingTop: "10px",
-        paddingBottom: "10px"
+        paddingTop: "40px",
+        paddingBottom: "20px",
+        position: 'relative',
+        zIndex: 1
       }}>
         <h1 style={{
           fontSize: "48px",
           fontWeight: "400",
           fontFamily: "'Georgia', serif",
           margin: "0 0 16px 0",
-          color: "#3b4a6b",
-          letterSpacing: "0.5px"
+          color: "#ffffff",
+          letterSpacing: "0.5px",
+          textShadow: "0 2px 10px rgba(255,255,255,0.3)"
         }}>
           Our Locations Worldwide
         </h1>
         
         <p style={{
           fontSize: "16px",
-          color: "#999",
+          color: "#b8bfd8",
           margin: "0 0 40px 0",
           lineHeight: "1.6",
           maxWidth: "600px",
@@ -373,13 +402,10 @@ export default function App() {
 
       <div style={{
         position: "relative",
-        width: "90%",
+        width: "100%",
         maxWidth: "100vw",
         margin: "0 auto",
-        height: "64vh",
-        background: "#ffffff",
-        borderRadius: "16px",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+        height: "70vh",
         overflow: "hidden",
         display: "flex",
         justifyContent: "center",
@@ -389,7 +415,7 @@ export default function App() {
           ref={globeEl}
           width={size[0]}
           height={size[1]}
-          backgroundColor="rgba(255,255,255,0)"
+          backgroundColor="rgba(0,0,0,0)"
           globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
           enablePointerInteraction={true}
           pointsData={locationGroups[activeFilter]}
@@ -413,7 +439,7 @@ export default function App() {
                 position: absolute;
                 bottom: 100%;
                 margin-bottom: 8px;
-                background: #3b4a6b;
+                background: rgba(59, 74, 107, 0.95);
                 color: white;
                 padding: 4px 8px;
                 border-radius: 4px;
@@ -422,7 +448,8 @@ export default function App() {
                 font-family: 'Inter', sans-serif;
                 white-space: nowrap;
                 pointer-events: none;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+                backdrop-filter: blur(10px);
               ">${d.name}</div>
               <svg width="32" height="40" viewBox="0 0 24 34" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 0C5.373 0 0 5.373 0 12c0 9 12 22 12 22s12-13 12-22c0-6.627-5.373-12-12-12z" fill="${d.color}"/>
@@ -436,14 +463,15 @@ export default function App() {
           }}
           pointLabel={(d) => `
             <div style="
-              background: #3b4a6b;
+              background: rgba(59, 74, 107, 0.95);
               color: white;
               padding: 8px 16px;
               borderRadius: 6px;
               fontSize: 14px;
               fontWeight: 600;
               fontFamily: 'Inter', sans-serif;
-              boxShadow: 0 2px 8px rgba(0,0,0,0.2);
+              boxShadow: 0 2px 8px rgba(0,0,0,0.5);
+              backdropFilter: blur(10px);
             ">
               ${d.name}
             </div>
@@ -459,7 +487,8 @@ export default function App() {
           left: "20px",
           display: "flex",
           flexDirection: "column",
-          gap: "8px"
+          gap: "8px",
+          zIndex: 10
         }}>
           <button
             onClick={() => {
@@ -471,17 +500,18 @@ export default function App() {
             style={{
               width: "36px",
               height: "36px",
-              background: "white",
-              border: "1px solid #ddd",
+              background: "rgba(255,255,255,0.1)",
+              border: "1px solid rgba(255,255,255,0.2)",
               borderRadius: "6px",
               cursor: "pointer",
               fontSize: "18px",
               fontWeight: "300",
-              color: "#666",
+              color: "white",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
+              boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+              backdropFilter: "blur(10px)"
             }}
           >
             +
@@ -496,41 +526,22 @@ export default function App() {
             style={{
               width: "36px",
               height: "36px",
-              background: "white",
-              border: "1px solid #ddd",
+              background: "rgba(255,255,255,0.1)",
+              border: "1px solid rgba(255,255,255,0.2)",
               borderRadius: "6px",
               cursor: "pointer",
               fontSize: "18px",
               fontWeight: "300",
-              color: "#666",
+              color: "white",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
+              boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+              backdropFilter: "blur(10px)"
             }}
           >
             −
           </button>
-        </div>
-
-        <div style={{
-          position: "absolute",
-          bottom: "12px",
-          right: "12px",
-          fontSize: "11px",
-          color: "#999",
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          background: "rgba(255,255,255,0.9)",
-          padding: "4px 8px",
-          borderRadius: "4px"
-        }}>
-          <span>© Leaflet</span>
-          <span>|</span>
-          <span>© OpenStreetMap contributors</span>
-          <span>|</span>
-          <span>© CARTO</span>
         </div>
 
         {selected && currentProfile && (
@@ -538,15 +549,17 @@ export default function App() {
             position: "absolute",
             top: `${popupPosition.y}px`,
             left: `${popupPosition.x}px`,
-            background: "white",
+            background: "rgba(26, 31, 58, 0.95)",
             borderRadius: "10px",
             padding: "16px",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
             maxWidth: "320px",
             width: "320px",
             zIndex: 1000,
             maxHeight: "400px",
-            overflow: "auto"
+            overflow: "auto",
+            backdropFilter: "blur(20px)",
+            border: "1px solid rgba(255,255,255,0.1)"
           }}>
             <button
               onClick={(e) => {
@@ -559,12 +572,12 @@ export default function App() {
                 right: "8px",
                 width: "24px",
                 height: "24px",
-                background: "#f5f5f5",
-                border: "none",
+                background: "rgba(255,255,255,0.1)",
+                border: "1px solid rgba(255,255,255,0.2)",
                 borderRadius: "50%",
                 cursor: "pointer",
                 fontSize: "16px",
-                color: "#666",
+                color: "white",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -585,7 +598,7 @@ export default function App() {
             <h3 style={{ 
               margin: "0 0 4px 0", 
               fontSize: "18px",
-              color: "#3b4a6b",
+              color: "white",
               fontWeight: "600"
             }}>
               {currentProfile.name}
@@ -594,7 +607,7 @@ export default function App() {
             <p style={{ 
               margin: "0 0 10px 0", 
               fontSize: "12px",
-              color: "#999"
+              color: "#b8bfd8"
             }}>
               {currentProfile.country} {currentProfile.population && `· ${currentProfile.population}`}
             </p>
@@ -602,7 +615,7 @@ export default function App() {
             <p style={{ 
               margin: "0 0 12px 0", 
               fontSize: "13px",
-              color: "#666",
+              color: "#d0d4e0",
               lineHeight: "1.5"
             }}>
               {currentProfile.description}
@@ -613,7 +626,7 @@ export default function App() {
                 <h4 style={{ 
                   margin: "0 0 8px 0",
                   fontSize: "11px",
-                  color: "#3b4a6b",
+                  color: "#b8bfd8",
                   fontWeight: "600",
                   textTransform: "uppercase",
                   letterSpacing: "0.5px"
