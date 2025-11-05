@@ -13,18 +13,18 @@ const TECH_BLUE = "#78a0c8";
 const TECH_LIGHT = "#a8c8e8";
 const TECH_GLOW = "#5080b0";
 
-const locationGroups = {
-  cities: [
-    { name: "Paris", lat: 48.8566, lng: 2.3522, size: 1.2, color: TECH_BLUE, id: "paris" },
-    { name: "London", lat: 51.5074, lng: -0.1278, size: 1.2, color: TECH_BLUE, id: "london" },
-    { name: "Dubai", lat: 25.2048, lng: 55.2708, size: 1.2, color: TECH_BLUE, id: "dubai" },
-    { name: "Milan", lat: 45.4642, lng: 9.19, size: 1.0, color: TECH_BLUE, id: "milan" },
-    { name: "Rome", lat: 41.9028, lng: 12.4964, size: 1.0, color: TECH_BLUE, id: "rome" },
-    { name: "Monaco", lat: 43.7384, lng: 7.4246, size: 0.9, color: TECH_BLUE, id: "monaco" },
-    { name: "Miami", lat: 25.7617, lng: -80.1918, size: 1.1, color: TECH_BLUE, id: "miami" },
-    { name: "New York", lat: 40.7128, lng: -74.006, size: 1.4, color: TECH_BLUE, id: "nyc" },
-    { name: "Las Vegas", lat: 36.1699, lng: -115.1398, size: 1.1, color: TECH_BLUE, id: "las-vegas" }
-  ],
+  const locationGroups = {
+    all: [
+      // Cities Collection
+      { lat: 40.7128, lng: -74.0060, name: "New York", color: WIREFRAME_MEDIUM, group: 'cities' },
+      { lat: 51.5074, lng: -0.1278, name: "London", color: WIREFRAME_MEDIUM, group: 'cities' },
+      { lat: 48.8566, lng: 2.3522, name: "Paris", color: WIREFRAME_MEDIUM, group: 'cities' },
+      { lat: 35.6762, lng: 139.6503, name: "Tokyo", color: WIREFRAME_MEDIUM, group: 'cities' },
+      { lat: 25.2048, lng: 55.2708, name: "Dubai", color: WIREFRAME_MEDIUM, group: 'cities' },
+      { lat: -33.8688, lng: 151.2093, name: "Sydney", color: WIREFRAME_MEDIUM, group: 'cities' },
+      { lat: 1.3521, lng: 103.8198, name: "Singapore", color: WIREFRAME_MEDIUM, group: 'cities' },
+      { lat: 41.9028, lng: 12.4964, name: "Rome", color: WIREFRAME_MEDIUM, group: 'cities' },
+      { lat: -22.9068, lng: -43.1729, name: "Rio de Janeiro", color: WIREFRAME_MEDIUM, group: 'cities' },
   winterski: [
     { name: "Courchevel", lat: 45.4167, lng: 6.6333, size: 0.9, color: TECH_BLUE, id: "courchevel" },
     { name: "Megève", lat: 45.8531, lng: 6.6333, size: 0.8, color: TECH_BLUE, id: "megeve" },
@@ -635,10 +635,24 @@ export default function App() {
           width={size[0]}
           height={size[1]}
           backgroundColor="rgba(0,0,0,0)"
-          globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+          
+          // Minimal wireframe globe - no texture, just graticules and polygons
+          globeImageUrl={null}
+          showGlobe={true}
+          showGraticules={true}
+          graticulesLineColor={() => WIREFRAME_LIGHT}
+          
+          // Load country polygons for minimal outline
+          polygonsData={[]}
+          polygonCapColor={() => 'rgba(0,0,0,0)'}
+          polygonSideColor={() => 'rgba(0,0,0,0)'}
+          polygonStrokeColor={() => WIREFRAME_MEDIUM}
+          polygonAltitude={0.001}
+          
           showAtmosphere={true}
-          atmosphereColor="#7a9fc8"
-          atmosphereAltitude={0.15}
+          atmosphereColor={WIREFRAME_LIGHT}
+          atmosphereAltitude={0.12}
+          
           enablePointerInteraction={true}
           
           pointsData={locationGroups[activeFilter]}
