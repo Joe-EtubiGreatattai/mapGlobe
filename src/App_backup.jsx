@@ -1,5 +1,6 @@
 import React from "react";
 import Globe from "react-globe.gl";
+import * as THREE from "three";
 import "./App.css";
 
 // Premium gold/champagne color palette for luxury brand
@@ -7,34 +8,39 @@ const BRAND_GOLD = "#D4AF37";
 const BRAND_LIGHT_GOLD = "#F4E4C1";
 const BRAND_DARK = "#0A0E1A";
 
-const locationGroups = {
-  cities: [
-    { name: "Paris", lat: 48.8566, lng: 2.3522, size: 1.2, color: BRAND_GOLD, id: "paris" },
-    { name: "London", lat: 51.5074, lng: -0.1278, size: 1.2, color: BRAND_GOLD, id: "london" },
-    { name: "Dubai", lat: 25.2048, lng: 55.2708, size: 1.2, color: BRAND_GOLD, id: "dubai" },
-    { name: "Milan", lat: 45.4642, lng: 9.19, size: 1.0, color: BRAND_GOLD, id: "milan" },
-    { name: "Rome", lat: 41.9028, lng: 12.4964, size: 1.0, color: BRAND_GOLD, id: "rome" },
-    { name: "Monaco", lat: 43.7384, lng: 7.4246, size: 0.9, color: BRAND_GOLD, id: "monaco" },
-    { name: "Miami", lat: 25.7617, lng: -80.1918, size: 1.1, color: BRAND_GOLD, id: "miami" },
-    { name: "New York", lat: 40.7128, lng: -74.006, size: 1.4, color: BRAND_GOLD, id: "nyc" },
-    { name: "Las Vegas", lat: 36.1699, lng: -115.1398, size: 1.1, color: BRAND_GOLD, id: "las-vegas" }
-  ],
+// Modern tech color palette for globe markers
+const TECH_BLUE = "#78a0c8";
+const TECH_LIGHT = "#a8c8e8";
+const TECH_GLOW = "#5080b0";
+
+  const locationGroups = {
+    all: [
+      // Cities Collection
+      { lat: 40.7128, lng: -74.0060, name: "New York", color: WIREFRAME_MEDIUM, group: 'cities' },
+      { lat: 51.5074, lng: -0.1278, name: "London", color: WIREFRAME_MEDIUM, group: 'cities' },
+      { lat: 48.8566, lng: 2.3522, name: "Paris", color: WIREFRAME_MEDIUM, group: 'cities' },
+      { lat: 35.6762, lng: 139.6503, name: "Tokyo", color: WIREFRAME_MEDIUM, group: 'cities' },
+      { lat: 25.2048, lng: 55.2708, name: "Dubai", color: WIREFRAME_MEDIUM, group: 'cities' },
+      { lat: -33.8688, lng: 151.2093, name: "Sydney", color: WIREFRAME_MEDIUM, group: 'cities' },
+      { lat: 1.3521, lng: 103.8198, name: "Singapore", color: WIREFRAME_MEDIUM, group: 'cities' },
+      { lat: 41.9028, lng: 12.4964, name: "Rome", color: WIREFRAME_MEDIUM, group: 'cities' },
+      { lat: -22.9068, lng: -43.1729, name: "Rio de Janeiro", color: WIREFRAME_MEDIUM, group: 'cities' },
   winterski: [
-    { name: "Courchevel", lat: 45.4167, lng: 6.6333, size: 0.9, color: BRAND_GOLD, id: "courchevel" },
-    { name: "Megève", lat: 45.8531, lng: 6.6333, size: 0.8, color: BRAND_GOLD, id: "megeve" },
-    { name: "Verbier", lat: 46.095, lng: 7.226, size: 0.8, color: BRAND_GOLD, id: "verbier" },
-    { name: "St Moritz", lat: 46.4908, lng: 9.8355, size: 0.9, color: BRAND_GOLD, id: "st-moritz" },
-    { name: "Aspen", lat: 39.1911, lng: -106.8175, size: 0.9, color: BRAND_GOLD, id: "aspen" }
+    { name: "Courchevel", lat: 45.4167, lng: 6.6333, size: 0.9, color: TECH_BLUE, id: "courchevel" },
+    { name: "Megève", lat: 45.8531, lng: 6.6333, size: 0.8, color: TECH_BLUE, id: "megeve" },
+    { name: "Verbier", lat: 46.095, lng: 7.226, size: 0.8, color: TECH_BLUE, id: "verbier" },
+    { name: "St Moritz", lat: 46.4908, lng: 9.8355, size: 0.9, color: TECH_BLUE, id: "st-moritz" },
+    { name: "Aspen", lat: 39.1911, lng: -106.8175, size: 0.9, color: TECH_BLUE, id: "aspen" }
   ],
   islandBeach: [
-    { name: "St Barth", lat: 17.8962, lng: -62.8503, size: 0.9, color: BRAND_GOLD, id: "st-barth" },
-    { name: "Mykonos", lat: 37.4467, lng: 25.3289, size: 0.9, color: BRAND_GOLD, id: "mykonos" },
-    { name: "Ibiza", lat: 38.9067, lng: 1.4206, size: 0.9, color: BRAND_GOLD, id: "ibiza" },
-    { name: "Costa Rica", lat: 9.7489, lng: -83.7534, size: 1.1, color: BRAND_GOLD, id: "costa-rica" },
-    { name: "Thailand", lat: 13.7563, lng: 100.5018, size: 1.1, color: BRAND_GOLD, id: "thailand" },
-    { name: "Maldives", lat: 3.2028, lng: 73.2207, size: 1.0, color: BRAND_GOLD, id: "maldives" },
-    { name: "Croatia", lat: 45.1, lng: 15.2, size: 1.0, color: BRAND_GOLD, id: "croatia" },
-    { name: "Bodrum", lat: 37.0344, lng: 27.4306, size: 0.9, color: BRAND_GOLD, id: "bodrum" }
+    { name: "St Barth", lat: 17.8962, lng: -62.8503, size: 0.9, color: TECH_BLUE, id: "st-barth" },
+    { name: "Mykonos", lat: 37.4467, lng: 25.3289, size: 0.9, color: TECH_BLUE, id: "mykonos" },
+    { name: "Ibiza", lat: 38.9067, lng: 1.4206, size: 0.9, color: TECH_BLUE, id: "ibiza" },
+    { name: "Costa Rica", lat: 9.7489, lng: -83.7534, size: 1.1, color: TECH_BLUE, id: "costa-rica" },
+    { name: "Thailand", lat: 13.7563, lng: 100.5018, size: 1.1, color: TECH_BLUE, id: "thailand" },
+    { name: "Maldives", lat: 3.2028, lng: 73.2207, size: 1.0, color: TECH_BLUE, id: "maldives" },
+    { name: "Croatia", lat: 45.1, lng: 15.2, size: 1.0, color: TECH_BLUE, id: "croatia" },
+    { name: "Bodrum", lat: 37.0344, lng: 27.4306, size: 0.9, color: TECH_BLUE, id: "bodrum" }
   ]
 };
 
@@ -222,17 +228,6 @@ export default function App() {
   const [size, setSize] = React.useState([window.innerWidth, window.innerHeight]);
   const [selected, setSelected] = React.useState(null);
   const [activeFilter, setActiveFilter] = React.useState('cities');
-  const [countries, setCountries] = React.useState([]);
-
-  // Load country data for outlines
-  React.useEffect(() => {
-    fetch('https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson')
-      .then(res => res.json())
-      .then(data => {
-        setCountries(data.features);
-      })
-      .catch(err => console.warn('Could not load country data:', err));
-  }, []);
 
   React.useEffect(() => {
     if (!globeEl.current) return;
@@ -246,6 +241,27 @@ export default function App() {
     controls.maxDistance = 800;
     
     globeEl.current.pointOfView({ lat: 25, lng: 20, altitude: 2.2 }, 0);
+    
+    // Add custom lighting for minimal look
+    if (globeEl.current.scene) {
+      const scene = globeEl.current.scene();
+      scene.fog = null;
+      
+      // Adjust lighting for high-tech minimal look
+      const ambientLight = scene.children.find(obj => obj.type === 'AmbientLight');
+      if (ambientLight) {
+        ambientLight.intensity = 0.6;
+      }
+      
+      // Add subtle rim lights for modern edge glow
+      const rimLight1 = new THREE.DirectionalLight(0x6a8fb5, 0.4);
+      rimLight1.position.set(-2, 0.5, 1);
+      scene.add(rimLight1);
+      
+      const rimLight2 = new THREE.DirectionalLight(0x5a7fa5, 0.3);
+      rimLight2.position.set(2, -0.5, -1);
+      scene.add(rimLight2);
+    }
   }, []);
 
   React.useLayoutEffect(() => {
@@ -620,35 +636,36 @@ export default function App() {
           height={size[1]}
           backgroundColor="rgba(0,0,0,0)"
           
-          // Solid dark minimalist globe - no photographic texture
-          globeImageUrl="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3Crect width='1' height='1' fill='%230a0e14'/%3E%3C/svg%3E"
-          bumpImageUrl={null}
+          // Minimal wireframe globe - no texture, just graticules and polygons
+          globeImageUrl={null}
+          showGlobe={true}
+          showGraticules={true}
+          graticulesLineColor={() => WIREFRAME_LIGHT}
           
-          // Minimalist atmosphere
-          showAtmosphere={true}
-          atmosphereColor="rgba(255, 255, 255, 0.12)"
-          atmosphereAltitude={0.12}
-          
-          // Country outlines with thin borders
-          polygonsData={countries}
-          polygonCapColor={() => 'rgba(15, 20, 30, 0.8)'}
-          polygonSideColor={() => 'rgba(255, 255, 255, 0.02)'}
-          polygonStrokeColor={() => 'rgba(255, 255, 255, 0.3)'}
+          // Load country polygons for minimal outline
+          polygonsData={[]}
+          polygonCapColor={() => 'rgba(0,0,0,0)'}
+          polygonSideColor={() => 'rgba(0,0,0,0)'}
+          polygonStrokeColor={() => WIREFRAME_MEDIUM}
           polygonAltitude={0.001}
           
+          showAtmosphere={true}
+          atmosphereColor={WIREFRAME_LIGHT}
+          atmosphereAltitude={0.12}
+          
           enablePointerInteraction={true}
+          
           pointsData={locationGroups[activeFilter]}
           pointLat={(d) => d.lat}
           pointLng={(d) => d.lng}
           pointColor={(d) => d.color}
-          pointAltitude={0.02}
-          pointRadius={0.4}
-          pointResolution={16}
+          pointAltitude={0.01}
+          pointRadius={0}
           
           htmlElementsData={locationGroups[activeFilter]}
           htmlLat={(d) => d.lat}
           htmlLng={(d) => d.lng}
-          htmlAltitude={0.02}
+          htmlAltitude={0.01}
           htmlElement={(d) => {
             const el = document.createElement('div');
             el.style.position = 'relative';
@@ -659,67 +676,68 @@ export default function App() {
               <div style="
                 position: absolute;
                 bottom: 100%;
-                margin-bottom: 10px;
-                background: rgba(0, 0, 0, 0.85);
-                color: ${BRAND_LIGHT_GOLD};
-                padding: 4px 12px;
-                border-radius: 6px;
-                font-size: 10px;
-                font-weight: 500;
+                margin-bottom: 12px;
+                background: linear-gradient(135deg, rgba(20, 25, 35, 0.92), rgba(10, 15, 25, 0.88));
+                color: rgba(200, 210, 220, 0.95);
+                padding: 6px 14px;
+                border-radius: 8px;
+                font-size: 11px;
+                font-weight: 600;
                 font-family: 'Inter', -apple-system, sans-serif;
                 white-space: nowrap;
                 pointer-events: none;
-                box-shadow: 0 4px 16px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.1);
-                backdrop-filter: blur(10px);
-                letter-spacing: 0.5px;
-                opacity: 0.9;
-                transition: all 0.3s ease;
-              " class="location-label">${d.name}</div>
+                box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(100, 140, 180, 0.2);
+                backdrop-filter: blur(20px);
+                letter-spacing: 0.3px;
+              ">${d.name}</div>
               <div style="
                 width: 12px;
                 height: 12px;
-                background: radial-gradient(circle, ${BRAND_GOLD}, ${BRAND_GOLD}cc);
+                background: radial-gradient(circle, rgba(120, 160, 200, 0.9), rgba(80, 120, 160, 0.6));
                 border-radius: 50%;
                 box-shadow: 
-                  0 0 16px ${BRAND_GOLD}aa, 
-                  0 0 8px ${BRAND_GOLD}66,
-                  0 0 4px rgba(255,255,255,0.4);
+                  0 0 12px rgba(120, 160, 200, 0.7),
+                  0 0 24px rgba(100, 140, 180, 0.4),
+                  inset 0 1px 2px rgba(255,255,255,0.4);
                 position: relative;
+                animation: pulse 2.5s ease-in-out infinite;
               ">
                 <div style="
                   position: absolute;
-                  inset: -4px;
-                  background: radial-gradient(circle, ${BRAND_GOLD}40, transparent 70%);
+                  inset: 2px;
+                  background: radial-gradient(circle, rgba(180, 200, 220, 0.9), transparent);
                   border-radius: 50%;
-                  animation: pulse 2.5s ease-in-out infinite;
+                "></div>
+                <div style="
+                  position: absolute;
+                  inset: -4px;
+                  background: radial-gradient(circle, rgba(120, 160, 200, 0.3), transparent);
+                  border-radius: 50%;
+                  animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
                 "></div>
               </div>
             `;
             el.style.cursor = 'pointer';
             el.style.pointerEvents = 'auto';
-            
-            // Brighten label on hover
-            el.onmouseenter = () => {
-              const label = el.querySelector('.location-label');
-              if (label) {
-                label.style.opacity = '1';
-                label.style.transform = 'scale(1.05)';
-                label.style.background = 'rgba(0, 0, 0, 0.95)';
-              }
-            };
-            el.onmouseleave = () => {
-              const label = el.querySelector('.location-label');
-              if (label) {
-                label.style.opacity = '0.9';
-                label.style.transform = 'scale(1)';
-                label.style.background = 'rgba(0, 0, 0, 0.85)';
-              }
-            };
-            
             el.onclick = () => handleLocationSelect(d);
             return el;
           }}
-          pointLabel={() => null}
+          pointLabel={(d) => `
+            <div style="
+              background: linear-gradient(135deg, rgba(10, 14, 26, 0.95), rgba(0, 0, 0, 0.9));
+              color: ${BRAND_LIGHT_GOLD};
+              padding: 8px 16px;
+              borderRadius: 8px;
+              fontSize: 13px;
+              fontWeight: 600;
+              fontFamily: 'Inter', -apple-system, sans-serif;
+              boxShadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px ${BRAND_GOLD}30;
+              backdropFilter: blur(20px);
+              letterSpacing: 0.3px;
+            ">
+              ${d.name}
+            </div>
+          `}
           onPointClick={(d) => {
             handleLocationSelect(d);
           }}
