@@ -21,17 +21,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(20, 20, 20, 0.3);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.02);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #C8C3BB 0%, #A8A39B 100%);
-  border-radius: 4px;
+  background: linear-gradient(135deg, #D4AF37, #F4E4C1);
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #EEE9E1 0%, #C8C3BB 100%);
+  background: linear-gradient(135deg, #F4E4C1, #D4AF37);
 }
 
 /* Premium animations */
@@ -49,25 +48,10 @@
 @keyframes pulse {
   0%, 100% {
     transform: scale(1);
-    opacity: 1;
+    opacity: 0.6;
   }
   50% {
-    transform: scale(1.15);
-    opacity: 0.8;
-  }
-}
-
-@keyframes ping {
-  0% {
-    transform: scale(1);
-    opacity: 0.7;
-  }
-  50% {
-    transform: scale(1.5);
-    opacity: 0.3;
-  }
-  100% {
-    transform: scale(2);
+    transform: scale(1.8);
     opacity: 0;
   }
 }
@@ -134,13 +118,13 @@
 
 /* Selection color */
 ::selection {
-  background: rgba(238, 233, 225, 0.25);
-  color: #EEE9E1;
+  background: rgba(212, 175, 55, 0.3);
+  color: #F4E4C1;
 }
 
 ::-moz-selection {
-  background: rgba(238, 233, 225, 0.25);
-  color: #EEE9E1;
+  background: rgba(212, 175, 55, 0.3);
+  color: #F4E4C1;
 }
 
 /* Smooth transitions for all interactive elements */

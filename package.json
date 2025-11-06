@@ -15,7 +15,8 @@
     "react-globe.gl": "^2.36.0",
     "three": "^0.181.0",
     "three-globe": "^2.44.1",
-    "three-render-objects": "^1.40.4"
+    "three-render-objects": "^1.40.4",
+    "topojson-client": "^3.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
